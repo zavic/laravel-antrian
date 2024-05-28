@@ -1,0 +1,57 @@
+.bi {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+}
+
+/*
+   * Sidebar
+   */
+
+@media (min-width: 768px) {
+    .sidebar .offcanvas-lg {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 48px;
+    }
+
+    .navbar-search {
+        display: block;
+    }
+}
+
+.sidebar .nav-link {
+    font-size: .875rem;
+    font-weight: 500;
+    color: #010f23;
+}
+
+[data-bs-theme=dark] .sidebar .nav-link {
+    font-size: .875rem;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.sidebar .nav-link.active {
+    background-color: #2470dc;
+    color: aliceblue;
+}
+
+.sidebar-heading {
+    font-size: .75rem;
+}
+
+/*
+   * Navbar
+   */
+
+.navbar-brand {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    font-weight: bold;
+}
+
+.navbar .form-control {
+    padding: .75rem 1rem;
+}
+

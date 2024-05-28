@@ -1,0 +1,12 @@
+.text-hero {
+    color: #2470dc;
+    font-size: 3rem;
+    font-family: "Poetsen One", sans-serif;
+}
+
+
+input[id=phone].no-spinner::-webkit-inner-spin-button,
+input[id=phone]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
