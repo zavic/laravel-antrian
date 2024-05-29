@@ -26,8 +26,8 @@ class QueueListLivewire extends Component
     public function mount()
     {
         $this->date_now = Carbon::now()->format('Y-m-d');
-        // $this->from_date = $this->date_now;
-        // $this->to_date = $this->date_now;
+        $this->from_date = $this->date_now;
+        $this->to_date = $this->date_now;
 
         $this->loket = 1;
     }

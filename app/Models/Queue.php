@@ -33,9 +33,4 @@ class Queue extends Model
             $user->slug = Str::uuid();
         });
     }
-
-    // public function loket(): HasMany
-    // {
-    //     return $this->hasMany(QueueLoket::class, 'loket');
-    // }
 }

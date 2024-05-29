@@ -1,57 +1,35 @@
 <div>
 
-    <div class="d-flex">
+    <div class="d-flex mb-3">
         <div>
             <input wire:model.live.debounce.300ms='search' class="form-control" type="text" id="search"
                 placeholder="Cari...">
         </div>
-
-
     </div>
     <div class="table-responsive">
         <table class="table table-striped table-hover table-responsive" id="user-list">
             <thead>
                 <tr>
-                    <th scope="col">
-                        <div class="d-flex">
-
-                            No
-
-                            <div class="ms-2">
-                                <i class="bi bi-chevron-down"></i>
-                            </div>
-
-                        </div>
-                    </th>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Role</th>
                     <th>
-                        <div class="d-flex">
-
-                            Nama
-
-                            {{-- <div class="ms-2">
-                                <i class="bi bi-chevron-up"></i>
-                            </div> --}}
-
-                        </div>
-                    </th>
-                    <th scope="col">Role</th>
-                    <th scope="col">
                         <div class="d-flex">
                             <a class="text-decoration-none nav-link" href="#">Alamat</a>
                             <div class="ms-3">
                                 <span wire:click='viewAddress' role="button">
                                     @if ($isViewAddress)
                                         <i class="bi bi-eye-slash"></i>
-                                        @else
+                                    @else
                                         <i class="bi bi-eye"></i>
                                     @endif
                                 </span>
                             </div>
                         </div>
                     </th>
-                    <th scope="col">Email</th>
-                    <th scope="col">No. WhatsApp</th>
-                    <th scope="col"></th>
+                    <th>Email</th>
+                    <th>No. WhatsApp</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -91,10 +69,9 @@
                                         class="btn btn-primary btn-sm me-1">
                                         <i class="bi bi-pen"></i></button>
                                     <button wire:click='delete({{ $item->id }})'
-                                        wire:confirm.prompt="Are you sure?\n\nType DELETE to confirm|DELETE"
+                                        wire:confirm="Apakah anda yakin menghapus User ini? \n\nIni bersifat PERMANEN tidak dapat di kembalikan lagi"
                                         class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash3"></i></button>
-
                                 </div>
                             </td>
                         </tr>
@@ -107,5 +84,7 @@
         </table>
 
     </div>
+
+    {{ $users->links() }}
 
 </div>

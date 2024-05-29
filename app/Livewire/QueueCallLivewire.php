@@ -22,7 +22,8 @@ class QueueCallLivewire extends Component
 
     public function mount()
     {
-        // $this->date_selected = Carbon::now()->format('Y-m-d');
+        !AppSetting::findOrFail(1)->loket_is_enabled && $this->loket_selected = 1;
+        $this->date_selected = Carbon::now()->format('Y-m-d');
     }
 
     public function queueCall($id)

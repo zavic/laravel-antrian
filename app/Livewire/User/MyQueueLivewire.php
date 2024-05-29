@@ -4,14 +4,11 @@ namespace App\Livewire\User;
 
 use App\Models\Queue;
 use App\Models\QueueLoket;
-use Carbon\Carbon;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class MyQueueLivewire extends Component
 {
-
     #[Url(except: '')]
     public $from_date;
 
@@ -24,43 +21,116 @@ class MyQueueLivewire extends Component
     #[Url(except: '')]
     public $status = 0;
 
-    public $isViewAddress = false;
+    public $isViewFilter = true;
+    public $isViewAddress;
+    public $isViewEdit;
 
-    public $queueNumber;
-    public $name;
+    public $sortQueueNumber;
+    public $sortName;
+    public $sortQueueDate;
+    public $sortStatus;
 
-    public function changeQueueNumber()
+    public $edit_id;
+    public $edit_queue_date;
+    public $edit_queue_number;
+    public $edit_loket;
+    public $edit_name;
+    public $edit_email;
+    public $edit_phone;
+    public $edit_address;
+
+    public function viewFilter()
     {
-        $this->name = null;
-        if ($this->queueNumber === 'asc') {
-            $this->queueNumber = 'desc';
-        } else {
-            $this->queueNumber = 'asc';
-        }
-    }
-
-    public function changeName()
-    {
-        $this->queueNumber = null;
-        if ($this->name === 'asc') {
-            $this->name = 'desc';
-        } else {
-            $this->name = 'asc';
-        }
-    }
-
-    public function resetAll()
-    {
-        $this->from_date = null;
-        $this->to_date = null;
-        $this->loket = null;
-        $this->status = 0;
-        $this->queueNumber = null;
+        $this->isViewFilter = !$this->isViewFilter;
     }
 
     public function viewAddress()
     {
         $this->isViewAddress = !$this->isViewAddress;
+    }
+
+    public function changeName()
+    {
+        $this->reset('sortQueueDate', 'sortQueueNumber', 'sortStatus');
+        $this->sortName = $this->sortName === 'ASC' ? 'DESC' : 'ASC';
+    }
+
+    public function changeQueueDate()
+    {
+        $this->reset('sortName', 'sortQueueNumber', 'sortStatus');
+        $this->sortQueueDate = $this->sortQueueDate === 'ASC' ? 'DESC' : 'ASC';
+    }
+
+    public function changeQueueNumber()
+    {
+        $this->reset('sortName', 'sortQueueDate', 'sortStatus');
+        $this->sortQueueNumber = $this->sortQueueNumber === 'ASC' ? 'DESC' : 'ASC';
+    }
+
+    public function changeStatus()
+    {
+        $this->reset('sortName', 'sortQueueDate', 'sortQueueNumber');
+        $this->sortStatus = $this->sortStatus === 'ASC' ? 'DESC' : 'ASC';
+    }
+
+    public function resetFilter()
+    {
+        $this->reset([
+            'isViewAddress',
+            'isViewEdit',
+            'sortQueueDate',
+            'sortName',
+            'sortQueueNumber',
+            'sortStatus'
+        ]);
+    }
+
+    public function editQueue($item)
+    {
+        $this->edit_id = $item['id'];
+        $this->edit_queue_date = $item['queue_date'];
+        $this->edit_queue_number = $item['queue_number'];
+        $this->edit_name = $item['name'];
+        $this->edit_email = $item['email'];
+        $this->edit_phone = $item['phone'];
+        $this->edit_address = $item['address'];
+
+        $this->isViewEdit = true;
+    }
+
+    public function delete($id)
+    {
+        $queue = Queue::findOrFail($id);
+        $queue->delete();
+
+        return redirect()->route('user-my-queue')->with('success', 'Antrian Berhasil Dihapus');
+    }
+
+    public function save()
+    {
+        $queue = Queue::findOrFail($this->edit_id);
+
+        $queue->update([
+            'name' => $this->edit_name,
+            'email' => $this->edit_email,
+            'phone' => $this->edit_phone,
+            'address' => $this->edit_address,
+        ]);
+
+        return redirect()->route('user-my-queue')->with('success', 'Antrian Berhasil Diperbaharui');
+    }
+
+    public function cancel()
+    {
+        $this->reset([
+            'edit_queue_date',
+            'edit_queue_number',
+            'edit_name',
+            'edit_email',
+            'edit_phone',
+            'edit_address',
+            'isViewEdit'
+        ]);
     }
 
     public function render()
@@ -83,21 +153,18 @@ class MyQueueLivewire extends Component
             $query->where('is_called', $this->status);
         }
 
-        if ($this->queueNumber === 'asc') {
-            $query->orderBy('queue_number', 'ASC');
-        }
+        $this->sortName === 'ASC' && $query->orderBy('name', 'ASC');
+        $this->sortName === 'DESC' && $query->orderBy('name', 'DESC');
 
-        if ($this->queueNumber === 'desc') {
-            $query->orderBy('queue_number', 'DESC');
-        }
+        $this->sortQueueDate === 'ASC' && $query->orderBy('queue_date', 'ASC');
+        $this->sortQueueDate === 'DESC' && $query->orderBy('queue_date', 'DESC');
 
-        if ($this->name === 'asc') {
-            $query->orderBy('name', 'ASC');
-        }
+        $this->sortQueueNumber === 'ASC' && $query->orderBy('queue_number', 'ASC');
+        $this->sortQueueNumber === 'DESC' && $query->orderBy('queue_number', 'DESC');
 
-        if ($this->name === 'desc') {
-            $query->orderBy('name', 'DESC');
-        }
+        $this->sortStatus === 'ASC' && $query->orderBy('is_called', 'ASC');
+        $this->sortStatus === 'DESC' && $query->orderBy('is_called', 'DESC');
+
 
         $queues = $query->paginate(10);
 

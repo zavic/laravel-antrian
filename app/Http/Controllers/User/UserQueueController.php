@@ -13,11 +13,6 @@ class UserQueueController extends Controller
 {
     use WithPagination;
 
-    public function index()
-    {
-
-    }
-
     public function create()
     {
         $lokets = QueueLoket::all();
@@ -33,32 +28,39 @@ class UserQueueController extends Controller
             'phone' => 'required | numeric | digits_between:9,15',
             'address' => 'required | min:1 | max:255',
             'queue_date' => 'required | date',
-            'loket' => 'required | min:1'
         ]);
 
-        $queue_date = $request->queue_date;
-        $loket = $request->loket;
-        $last_queue_number = Queue::where('queue_date', $queue_date)->where('loket', $loket)->latest()->first();
         $queue_number = 1;
+        $phone = $request->phone;
+        $queue_date = $request->queue_date;
+
+        $loket = $request->loket;
+        if (!$request->loket) {
+            $loket = 1;
+        }
+
+        $last_queue_number = Queue::where('queue_date', $queue_date)->where('loket', $loket)->latest()->first();
 
         if ($last_queue_number) {
             $queue_number = $last_queue_number->queue_number + 1;
         }
 
         if (substr($request->phone, 0, 1) != 0) {
-            $request->phone = 0 . $request->phone;
+            $phone = 0 . $request->phone;
         }
 
-        Queue::create([
-            'user_id' => Auth::user()->id,
+        $new_queue = [
+            'user_id' => auth()->user()->id,
             'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,
+            'phone' => $phone,
             'address' => $request->address,
             'queue_date' => $request->queue_date,
-            'loket' => $request->loket,
+            'loket' => $loket,
             'queue_number' => $queue_number
-        ]);
+        ];
+
+        Queue::create($new_queue);
 
         return redirect()->route('user-my-queue')->with('success', 'Antrian Berhasil Ditambahkan');
     }

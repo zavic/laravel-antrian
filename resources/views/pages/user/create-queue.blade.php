@@ -1,4 +1,15 @@
 <x-guest-layout title="Tambah Antrian">
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="m-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <h3 class="mb-4">Tambah Antrian</h3>
     <div class="row">
         <div class="col">
@@ -8,7 +19,7 @@
                     <label for="name" class="col-sm-3 col-form-label">Nama Lengkap</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                            name='name' required>
+                            name='name' value="{{ auth()->user()->name }}" required>
                         @error('name')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -20,7 +31,7 @@
                     <label for="email" class="col-sm-3 col-form-label">Email</label>
                     <div class="col-sm-9">
                         <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                            name="email" required>
+                            name="email" value="{{ auth()->user()->email }}" required>
                         @error('email')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -34,8 +45,8 @@
                         <div class="input-group">
                             <span class="input-group-text" id="phone">+62</span>
                             <input id="phone" name="phone" type="number"
-                                class="form-control no-spinner @error('phone') is-invalid @enderror" aria-describedby="phone"
-                                value="{{ old('phone') }}" required>
+                                class="form-control no-spinner @error('phone') is-invalid @enderror"
+                                aria-describedby="phone" value="{{ auth()->user()->phone }}" required>
                             @error('phone')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -47,7 +58,8 @@
                 <div class="mb-3 row">
                     <label for="address" class="col-sm-3 col-form-label">Alamat</label>
                     <div class="col-sm-9">
-                        <textarea class="form-control @error('address') is-invalid @enderror" id="address" name="address" required></textarea>
+                        <textarea class="form-control @error('address') is-invalid @enderror" id="address" name="address" required>{{ auth()->user()->address }}
+                        </textarea>
                         @error('address')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -58,8 +70,8 @@
                 <div class="mb-3 row">
                     <label for="queue_date" class="col-sm-3 col-form-label">Tanggal Antrian</label>
                     <div class="col-sm-9">
-                        <input type="date" class="form-control @error('queue_date') is-invalid @enderror" id="queue_date"
-                            name="queue_date" min="2024-05-16" max="2025-12-31" required>
+                        <input type="date" class="form-control @error('queue_date') is-invalid @enderror"
+                            id="queue_date" name="queue_date" min="2024-05-16" max="2025-12-31" required>
                         @error('queue_date')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -72,9 +84,10 @@
                         <label for="loket" class="col-sm-3 col-form-label">Loket</label>
                         <div class="col-sm-9">
                             <select class="form-select @error('loket') is-invalid @enderror" name="loket" required>
-                                <option value="">Pilih Loket</option>
+                                <option>Pilih Loket</option>
                                 @foreach ($lokets as $item)
-                                    <option value="{{ $item->loket_number }}">{{ $item->loket_number }} - {{ $item->name }}</option>
+                                    <option value="{{ $item->loket_number }}">{{ $item->loket_number }} -
+                                        {{ $item->name }}</option>
                                 @endforeach
                             </select>
                             @error('loket')

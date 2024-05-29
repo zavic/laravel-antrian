@@ -84,13 +84,15 @@
             <hr class="my-3">
 
             <ul class="nav flex-column mb-auto">
-                <li class="nav-item">
-                    <a class="nav-link d-flex gap-2 @if (request()->routeIs('app-settings')) active @endif"
-                        href="{{ route('app-settings') }}">
-                        <i class="bi bi-tools"></i>
-                        Pengaturan Aplikasi
-                    </a>
-                </li>
+                @if (auth()->user()->role === 'ADMIN')
+                    <li class="nav-item">
+                        <a class="nav-link d-flex gap-2 @if (request()->routeIs('app-settings')) active @endif"
+                            href="{{ route('app-settings') }}">
+                            <i class="bi bi-tools"></i>
+                            Pengaturan Aplikasi
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <a class="nav-link d-flex gap-2 @if (request()->routeIs('user-profile')) active @endif"
                         href="{{ route('user-profile') }}">

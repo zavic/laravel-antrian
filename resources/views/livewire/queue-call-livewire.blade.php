@@ -1,29 +1,31 @@
 <div>
     <div class="mb-3 row">
-        <div class="col">
-            <label for="date_selected" class="col-form-label">Loket</label>
-            <div class="col">
-                <select wire:model.live='loket_selected' class="form-select" name="loket">
-                    <option>Pilih Loket</option>
-                    @foreach ($lokets as $item)
-                        <option value="{{ $item->loket_number }}">{{ $item->loket_number }} - {{ $item->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div class="col">
+        <div class="col-6">
             <label for="date_selected" class="col-form-label">Tanggal Antrian</label>
             <div class="col">
                 <input wire:model.live='date_selected' type="date" class="form-control" id="date_selected">
             </div>
         </div>
+        @if (App\Models\AppSetting::findOrFail(1)->loket_is_enabled)
+            <div class="col-6">
+                <label for="date_selected" class="col-form-label">Loket</label>
+                <div class="col">
+                    <select wire:model.live='loket_selected' class="form-select" name="loket">
+                        <option>Pilih Loket</option>
+                        @foreach ($lokets as $item)
+                            <option value="{{ $item->loket_number }}">{{ $item->loket_number }} - {{ $item->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        @endif
     </div>
 
     @if ($loket_selected)
         <h3 class="mt-4 fw-bold">Loket {{ $loket_selected }}</h3>
     @endif
-    
+
     @if ($queue_next)
         <p class="m-0">Jumlah antrian {{ $queue_next_length }}</p>
         @if ($queue_calling)

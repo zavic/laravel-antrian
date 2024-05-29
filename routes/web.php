@@ -36,12 +36,13 @@ Route::middleware('auth')->group(function () {
 
 // Admin and Staff
 Route::middleware(['can:adminAndStaff'])->group(function () {
+
     // Dashboard
     Route::get('/admin', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
     // CRUD Antrian
-    Route::get('/admin/antrian/list', [QueueController::class, 'index'])->name('queue-list');
+    Route::get('/admin/antrian', [QueueController::class, 'index'])->name('queue-list');
     Route::get('/admin/antrian/tambah', [QueueController::class, 'create'])->name('queue-add');
     Route::post('/admin/antrian', [QueueController::class, 'store'])->name('queue-store');
     Route::get('/admin/antrian/edit/{id}', [QueueController::class, 'edit'])->name('queue-edit');
@@ -56,17 +57,17 @@ Route::middleware(['can:adminAndStaff'])->group(function () {
 
     // Layar Monitor Antrian
     Route::get('/admin/antrian/monitor', [QueueController::class, 'monitor'])->name('queue-monitor');
-
-    // Settings
-    Route::get('/admin/pengaturan', [AppSettingController::class, 'index'])->name('app-settings');
-    Route::put('/admin/pengaturan', [AppSettingController::class, 'update'])->name('update-app-settings');
 });
 
 // Only Admin
 Route::middleware(['can:admin'])->group(function() {
+
     // CRUD User
-    Route::get('/admin/user/list', [UserController::class, 'index'])->name('user-list');
+    Route::get('/admin/user', [UserController::class, 'index'])->name('user-list');
     Route::get('/admin/user/create', [UserController::class, 'create'])->name('user-create');
     Route::post('/admin/user', [UserController::class, 'store'])->name('user-store');
 
+    // Settings
+    Route::get('/admin/pengaturan', [AppSettingController::class, 'index'])->name('app-settings');
+    Route::put('/admin/pengaturan', [AppSettingController::class, 'update'])->name('update-app-settings');
 });
