@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class QueueLoketLivewire extends Component
 {
-    public $latest_loket_number;
+    public $latest_loket_number = 1;
     public $add_name;
 
     public $edit_loket_id;
@@ -16,7 +16,8 @@ class QueueLoketLivewire extends Component
 
     public function mount()
     {
-        $this->latest_loket_number = QueueLoket::latest()->first()->loket_number + 1;
+        $latest_loket_number = QueueLoket::orderBy('loket_number', 'DESC')->first();
+        $latest_loket_number && $this->latest_loket_number = $latest_loket_number->loket_number + 1;
     }
 
     public function store()
@@ -26,7 +27,8 @@ class QueueLoketLivewire extends Component
             'name' => $this->add_name,
         ]);
 
-        $this->reset('add_name');
+        $this->reset();
+        redirect()->route('queue-loket')->with('success', 'Loket berhasil Dibuat');
     }
 
     public function editLoket($loket)
