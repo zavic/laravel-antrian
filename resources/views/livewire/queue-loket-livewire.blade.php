@@ -12,7 +12,7 @@
                 @foreach ($lokets as $item)
                     @if ($edit_loket_id == $item->id)
                         <tr>
-                            <td>1</td>
+                            <td>{{ $item->loket_number }}</td>
                             <td>
                                 <input wire:model='edit_name' type="text" class="form-control">
                             </td>
