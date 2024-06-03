@@ -39,7 +39,6 @@ class QueueCallLivewire extends Component
             'called_at' => $now
         ]);
 
-
         $this->dispatch('queue-called', $queue->queue_number, $loket_is_enabled->loket_is_enabled, $queue->loket)->self();
     }
 

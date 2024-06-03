@@ -14,13 +14,11 @@
 
             <div class="row row-cols-4 justify-content-around pt-4" wire:poll.4s='update'>
 
-
-
                 @foreach ($lokets as $index => $item)
                     @if ($item)
                         <div class="col">
                             <div class="bg-light rounded-4 ">
-                                <p class="fs-4 text-center pt-3">Loket {{ $item->loket }}</p>
+                                <p class="fs-4 text-center pt-3">Loket {{ $item->loket }} - {{ $item->queueLoket->name }}</p>
                                 <p class="fs-1 text-center fw-bold">{{ $item->queue_number }}</p>
                                 <p class="fs-5 text-center pb-3">{{ $item->name }}</p>
                             </div>

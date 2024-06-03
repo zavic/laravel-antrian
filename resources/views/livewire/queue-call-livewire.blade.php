@@ -154,53 +154,53 @@
                     audioPlay(nomorStr(-2, 2), delay = delay + 1500);
                     if (value[1] == 1) {
                         audioPlay('diloket', delay = delay + 1500)
-                        audioPlay(value[2], delay = delay + 1500)
+                        loketPlay(value[2], delay = delay + 1500)
                     }
-                    audioPlay('endBell', delay = delay + 1500);
+                    audioPlay('endBell', delay = delay + 2500);
                 } else if (puluhan == '1') {
                     audioPlay(nomorStr(-1, 1), delay = delay + 2000);
                     audioPlay('belas', delay = delay + 1500);
                     if (value[1] == 1) {
                         audioPlay('diloket', delay = delay + 1500)
-                        audioPlay(value[2], delay = delay + 1500)
+                        loketPlay(value[2], delay = delay + 1500)
                     }
-                    audioPlay('endBell', delay = delay + 1500);
+                    audioPlay('endBell', delay = delay + 2500);
                 } else if (puluhan != '0') {
                     audioPlay(nomorStr(-2, 1), delay = delay + 2000);
                     audioPlay('puluh', delay = delay + 1500);
                     if (satuan == 0) {
                         if (value[1] == 1) {
                             audioPlay('diloket', delay = delay + 1500)
-                            audioPlay(value[2], delay = delay + 1500)
+                            loketPlay(value[2], delay = delay + 1500)
                         }
                         audioPlay('endBell', delay = delay + 1000);
                     } else {
                         audioPlay(nomorStr(-1, 1), delay = delay + 2000);
                         if (value[1] == 1) {
                             audioPlay('diloket', delay = delay + 1500)
-                            audioPlay(value[2], delay = delay + 1500)
+                            loketPlay(value[2], delay = delay + 1500)
                         }
-                        audioPlay('endBell', delay = delay + 1500);
+                        audioPlay('endBell', delay = delay + 2500);
                     }
                 } else if (puluhan == '0') {
                     if (satuan == '0') {
                         if (value[1] == 1) {
                             audioPlay('diloket', delay = delay + 1500)
-                            audioPlay(value[2], delay = delay + 1500)
+                            loketPlay(value[2], delay = delay + 1500)
                         }
-                        audioPlay('endBell', delay = delay + 1500);
+                        audioPlay('endBell', delay = delay + 2500);
                     } else {
                         audioPlay(nomorStr(-1, 1), delay = delay + 1500);
                         if (value[1] == 1) {
                             audioPlay('diloket', delay = delay + 1500)
-                            audioPlay(value[2], delay = delay + 1500)
+                            loketPlay(value[2], delay = delay + 1500)
                         }
-                        audioPlay('endBell', delay = delay + 1500);
+                        audioPlay('endBell', delay = delay + 2500);
                     }
                 } else {
                     if (value[1] == 1) {
                         audioPlay('diloket', delay = delay + 1500)
-                        audioPlay(value[2], delay = delay + 1500)
+                        loketPlay(value[2], delay = delay + 1500)
                     }
                     audioPlay('endBell', delay = delay + 2000);
                 }
@@ -236,6 +236,14 @@
                 }, delay);
             }
 
+            function loketPlay(suara, delay) {
+                setTimeout(() => {
+                    audio.setAttribute('src', "{{ asset('storage/audio/loket') }}" + '/' + suara +
+                        '.mp3');
+                    audio.play();
+                }, delay);
+            }
+
             // Suara bel awal berbunyi
             startBell.play();
 
@@ -245,9 +253,9 @@
                 audioPlay(value[0], delay = delay + 2000)
                 if (value[1] == 1) {
                     audioPlay('diloket', delay = delay + 1500)
-                    audioPlay(value[2], delay = delay + 1500)
+                    loketPlay(value[2], delay = delay + 1500)
                 }
-                audioPlay('endBell', delay + 1000)
+                audioPlay('endBell', delay + 3000)
             } else if (value[0] > 9 && value[0] < 100) {
                 let delay = 4000
                 audioPlay('noAntrian', delay)

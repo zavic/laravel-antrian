@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class QueueLoket extends Model
 {
@@ -15,9 +15,8 @@ class QueueLoket extends Model
         'name',
     ];
 
-    // public function queue(): BelongsTo
-    // {
-    //     return $this->belongsTo(Queue::class, 'loket');
-    // }
-
+    public function queue(): HasMany
+    {
+        return $this->hasMany(Queue::class, 'loket_number', 'loket');
+    }
 }

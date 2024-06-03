@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Queue;
 use App\Models\QueueLoket;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -18,13 +19,12 @@ class QueueMonitorLivewire extends Component
         $this->queue_date = Carbon::now()->toDateString();
         $this->queue_date_display = Carbon::now()->isoFormat('dddd, D MMMM Y');
 
-
         $lokets = QueueLoket::all();
 
         foreach ($lokets as $index => $value) {
             $loket_number = $value->loket_number;
 
-            $queue[$index] = DB::table('queues')
+            $queue[$index] = Queue::with('queueLoket')
             ->where('queue_date', $this->queue_date)
             ->where('is_called', 1)
             ->where('loket', $loket_number)
@@ -33,7 +33,7 @@ class QueueMonitorLivewire extends Component
         }
 
         $this->lokets = $queue;
-
+        // dd($this->lokets);
     }
 
     public function update()
@@ -41,13 +41,12 @@ class QueueMonitorLivewire extends Component
         $this->queue_date = Carbon::now()->toDateString();
         $this->queue_date_display = Carbon::now()->isoFormat('dddd, D MMMM Y');
 
-
         $lokets = QueueLoket::all();
 
         foreach ($lokets as $index => $value) {
             $loket_number = $value->loket_number;
 
-            $queue[$index] = DB::table('queues')
+            $queue[$index] = Queue::with('queueLoket')
             ->where('queue_date', $this->queue_date)
             ->where('is_called', 1)
             ->where('loket', $loket_number)
@@ -56,15 +55,6 @@ class QueueMonitorLivewire extends Component
         }
 
         $this->lokets = $queue;
-
-        // $this->queue_date = Carbon::now()->toDateString();
-        // $this->queue_date_display = Carbon::now()->isoFormat('dddd, D MMMM Y');
-
-        // $this->queues = DB::table('queues')
-        //     // ->where('queue_date', $this->queue_date)
-        //     ->where('is_called', 1)
-        //     ->orderByDesc('called_at')
-        //     ->first();
     }
 
     public function render()

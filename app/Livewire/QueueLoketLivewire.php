@@ -22,6 +22,23 @@ class QueueLoketLivewire extends Component
 
     public function store()
     {
+        $text = escapeshellarg($this->add_name);
+        $fileName = $this->latest_loket_number;
+        $outputPath = storage_path('app/public/audio/loket/' . $fileName .'.mp3');
+
+        $pythonPath = 'C:\Users\msayy\AppData\Local\Programs\Python\Python312\python'; // Pastikan path ini benar di sistem Anda
+        $scriptPath = base_path('python/convert_tts.py');
+
+        $command = "$pythonPath $scriptPath $text $outputPath";
+
+        // Tambahkan pengecekan kesalahan
+        $output = shell_exec($command . ' 2>&1');
+        if (file_exists($outputPath)) {
+            session()->flash('success', 'File audio berhasil disimpan.');
+        } else {
+            session()->flash('error', 'Gagal membuat file audio. Output: ' . $output);
+        }
+
         QueueLoket::create([
             'loket_number' => $this->latest_loket_number,
             'name' => $this->add_name,

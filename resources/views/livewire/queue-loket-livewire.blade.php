@@ -1,4 +1,16 @@
 <div>
+    @session('success')
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endsession
+    @session('failed')
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('failed') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endsession
     <div class="table-responsive">
         <table class="table table-striped table-hover table-responsive">
             <thead>
@@ -9,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($lokets as $item)
+                @forelse ($lokets as $item)
                     @if ($edit_loket_id == $item->id)
                         <tr>
                             <td>{{ $item->loket_number }}</td>
@@ -40,7 +52,13 @@
                             </td>
                         </tr>
                     @endif
-                @endforeach
+                @empty
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Loket Antrian tidak boleh kosong!</strong> <br> Minimal ada satu loket sebagai default Loket
+                        Antrian
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endforelse
             </tbody>
         </table>
     </div>

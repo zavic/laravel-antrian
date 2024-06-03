@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Queue extends Model
@@ -32,5 +31,10 @@ class Queue extends Model
         static::creating(function ($user) {
             $user->slug = Str::uuid();
         });
+    }
+
+    public function queueLoket(): BelongsTo
+    {
+        return $this->belongsTo(QueueLoket::class, 'loket', 'loket_number');
     }
 }
