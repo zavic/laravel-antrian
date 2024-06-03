@@ -24,15 +24,21 @@ class QueueLoketLivewire extends Component
     {
         $text = escapeshellarg($this->add_name);
         $fileName = $this->latest_loket_number;
-        $outputPath = storage_path('app/public/audio/loket/' . $fileName .'.mp3');
+        $outputPath = storage_path('app/public/audio/loket/' . $fileName . '.mp3');
 
-        $pythonPath = 'C:\Users\msayy\AppData\Local\Programs\Python\Python312\python'; // Pastikan path ini benar di sistem Anda
+        // Deteksi path Python secara dinamis
+        if (stripos(PHP_OS, 'WIN') === 0) {
+            $pythonPath = 'C:\Users\msayy\AppData\Local\Programs\Python\Python312\python';
+        } else {
+            $pythonPath = '/usr/bin/python3.12';
+        }
+
         $scriptPath = base_path('python/convert_tts.py');
 
         $command = "$pythonPath $scriptPath $text $outputPath";
 
         // Tambahkan pengecekan kesalahan
-        $output = shell_exec($command . ' 2>&1');
+        $output = shell_exec($command);
         if (file_exists($outputPath)) {
             session()->flash('success', 'File audio berhasil disimpan.');
         } else {
@@ -71,7 +77,6 @@ class QueueLoketLivewire extends Component
         ]);
 
         $this->cancel();
-
     }
 
     public function delete($id)
