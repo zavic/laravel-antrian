@@ -7,8 +7,9 @@ use App\Models\QueueLoket;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class QueueController extends Controller
 {
@@ -29,8 +30,6 @@ class QueueController extends Controller
     public function create()
     {
         $lokets = QueueLoket::all();
-
-
         return view('pages.admin.queue.add-queue', compact('lokets'));
     }
 
@@ -42,34 +41,42 @@ class QueueController extends Controller
         $request->validate([
             'name' => 'required | min:1 | max:255',
             'email' => 'required | min:1 | max:255',
-            'phone' => 'required | numeric | digits_between:9,15',
+            'phone' => 'required | numeric | digits_between:9,15 | unique:users,phone',
             'address' => 'required | min:1 | max:255',
             'queue_date' => 'required | date',
         ]);
-
-        $user_from_email = User::where('email', $request->email)->get()->first();
-
-        if ($user_from_email) {
-            $user_id = $user_from_email->id;
-        }
-
-        $queue_number = 1;
-        $phone = $request->phone;
-        $queue_date = $request->queue_date;
 
         $loket = $request->loket;
         if (!$request->loket) {
             $loket = 1;
         }
 
+        $queue_number = 1;
+        $queue_date = $request->queue_date;
         $last_queue_number = Queue::where('queue_date', $queue_date)->where('loket', $loket)->latest()->first();
 
         if ($last_queue_number) {
             $queue_number = $last_queue_number->queue_number + 1;
         }
 
+        $phone = $request->phone;
         if (substr($request->phone, 0, 1) != 0) {
             $phone = 0 . $request->phone;
+        }
+
+        $user_from_email = User::where('email', $request->email)->get()->first();
+        if ($user_from_email) {
+            $user_id = $user_from_email->id;
+        } else {
+            $new_user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $phone,
+                'address' => $request->address,
+                'password' => Hash::make('password'),
+                'remember_token' => Str::random(10),
+            ]);
+            $user_id = $new_user->id;
         }
 
         $new_queue = [
@@ -164,6 +171,4 @@ class QueueController extends Controller
     {
         return view('pages.admin.queue.monitor-queue');
     }
-
-
 }
