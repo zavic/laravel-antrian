@@ -18,8 +18,6 @@ class QueueLoketLivewire extends Component
     {
         $latest_loket_number = QueueLoket::orderBy('loket_number', 'DESC')->first();
         $latest_loket_number && $this->latest_loket_number = $latest_loket_number->loket_number + 1;
-        $os = PHP_OS;
-        dd($os);
     }
 
     public function store()
@@ -27,12 +25,13 @@ class QueueLoketLivewire extends Component
         $text = escapeshellarg($this->add_name);
         $fileName = $this->latest_loket_number;
         $outputPath = storage_path('app/public/audio/loket/' . $fileName . '.mp3');
-        $pythonPath = '/usr/bin/python3.12';
 
         // Deteksi sistem operasi dan path Python
         if (PHP_OS === 'WINNT') {
             // Jika OS adalah Windows
             $pythonPath = 'C:\Users\msayy\AppData\Local\Programs\Python\Python312\python';
+        } elseif (PHP_OS === 'Linux') {
+            $pythonPath = '/usr/bin/python3.12';
         }
 
         $scriptPath = base_path('python/convert_tts.py');
