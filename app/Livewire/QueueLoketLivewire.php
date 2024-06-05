@@ -18,6 +18,8 @@ class QueueLoketLivewire extends Component
     {
         $latest_loket_number = QueueLoket::orderBy('loket_number', 'DESC')->first();
         $latest_loket_number && $this->latest_loket_number = $latest_loket_number->loket_number + 1;
+        $os = PHP_OS;
+        dd($os);
     }
 
     public function store()
