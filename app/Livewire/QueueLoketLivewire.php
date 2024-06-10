@@ -24,14 +24,14 @@ class QueueLoketLivewire extends Component
     {
         $text = escapeshellarg($this->add_name);
         $fileName = $this->latest_loket_number;
-        $outputPath = storage_path('app/public/audio/loket/' . $fileName . '.mp3');
+        $outputPath = escapeshellarg(storage_path('app/public/audio/loket/' . $fileName . '.mp3'));
 
         // Deteksi sistem operasi dan path Python
         if (PHP_OS === 'WINNT') {
             // Jika OS adalah Windows
             $pythonPath = 'C:\Users\msayy\AppData\Local\Programs\Python\Python312\python';
         } elseif (PHP_OS === 'Linux') {
-            $pythonPath = 'sudo /usr/bin/python3.12';
+            $pythonPath = '/usr/bin/python3.12';
         }
 
         $scriptPath = base_path('python/convert_tts.py');
