@@ -22,38 +22,77 @@ class QueueLoketLivewire extends Component
 
     public function store()
     {
-        $text = escapeshellarg($this->add_name);
+        $text = $this->add_name;
         $fileName = $this->latest_loket_number;
-        $outputPath = escapeshellarg(storage_path('app/public/audio/loket/' . $fileName . '.mp3'));
+        $outputPath = storage_path('app/public/audio/loket/' . $fileName . '.mp3');
+        $outputDir = dirname($outputPath);
+
+        // Buat direktori jika belum ada
+        if (!file_exists($outputDir)) {
+            mkdir($outputDir, 0755, true);
+        }
 
         // Deteksi sistem operasi dan path Python
-        if (PHP_OS === 'WINNT') {
-            // Jika OS adalah Windows
-            $pythonPath = 'C:\Users\msayy\AppData\Local\Programs\Python\Python312\python';
-        } elseif (PHP_OS === 'Linux') {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $pythonPath = 'C:\\Users\\msayy\\AppData\\Local\\Programs\\Python\\Python312\\python.exe';
+        } else {
             $pythonPath = '/usr/bin/python3.12';
         }
 
         $scriptPath = base_path('python/convert_tts.py');
 
-        $command = "$pythonPath $scriptPath $text $outputPath";
+        $command = escapeshellcmd("$pythonPath $scriptPath \"$text\" \"$outputPath\"");
 
-        // Tambahkan pengecekan kesalahan
+        // Jalankan perintah dan tangkap output serta kode keluaran
         $output = shell_exec($command);
         if (file_exists($outputPath)) {
-            session()->flash('success', 'File audio berhasil disimpan.');
+            QueueLoket::create([
+                'loket_number' => $this->latest_loket_number,
+                'name' => $this->add_name,
+            ]);
+
+            $this->reset();
+
+            return redirect()->route('queue-loket')->with('success', 'Loket berhasil dibuat');
         } else {
-            session()->flash('error', 'Gagal membuat file audio. Output: ' . $output);
+            return redirect()->route('queue-loket')->with('error', 'Gagal membuat file audio. Output: ' . $output);
         }
-
-        QueueLoket::create([
-            'loket_number' => $this->latest_loket_number,
-            'name' => $this->add_name,
-        ]);
-
-        $this->reset();
-        redirect()->route('queue-loket')->with('success', 'Loket berhasil Dibuat');
     }
+
+    // public function store2()
+    // {
+    //     $text = $this->add_name;
+    //     $fileName = $this->latest_loket_number;
+    //     $outputPath = escapeshellarg(storage_path('app/public/audio/loket/' . $fileName . '.mp3'));
+
+    //     // Deteksi sistem operasi dan path Python
+    //     if (PHP_OS === 'WINNT') {
+    //         // Jika OS adalah Windows
+    //         $pythonPath = 'C:\Users\msayy\AppData\Local\Programs\Python\Python312\python';
+    //     } elseif (PHP_OS === 'Linux') {
+    //         $pythonPath = '/usr/bin/python3.12';
+    //     }
+
+    //     $scriptPath = base_path('python/convert_tts.py');
+
+    //     $command = "$pythonPath $scriptPath $text $outputPath";
+
+    //     // Tambahkan pengecekan kesalahan
+    //     $output = shell_exec($command);
+    //     if (file_exists($outputPath)) {
+    //         QueueLoket::create([
+    //             'loket_number' => $this->latest_loket_number,
+    //             'name' => $this->add_name,
+    //         ]);
+
+    //         $this->reset();
+
+    //         redirect()->route('queue-loket')->with('success', 'Loket berhasil Dibuat');
+    //         session()->flash('success', 'Loket berhasil di simpan.');
+    //     } else {
+    //         session()->flash('error', 'Gagal membuat file audio. Output: ' . $output);
+    //     }
+    // }
 
     public function editLoket($loket)
     {
